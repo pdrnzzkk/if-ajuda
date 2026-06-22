@@ -1,0 +1,29 @@
+/*
+  IF-Ajuda - Plataforma de Monitoria e Banco de Questões
+  IFSULDEMINAS - Campus Pouso Alegre
+  Grupo de Informática do IFSULDEMINAS - 2026
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f4f6f8;
+  color: #1a1a1a;
+}
+
+.header {
+  background-color: #006633;
+  color: #ffffff;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.main {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
