@@ -8,7 +8,7 @@
  * e o seed automático da grade curricular do campus.
  */
 
-import { supabase } from '../config/supabase.js';
+import { getSupabaseClient } from '../config/supabase.js';
 import { materiasDoIF } from '../config/seedData/materiasIF.js';
 
 const TABLE = 'materias';
@@ -50,6 +50,7 @@ export function sanitizeMateriaInput(input) {
  * @returns {Promise<object[]>}
  */
 export async function listMaterias() {
+  const supabase = await getSupabaseClient();
   const { data, error } = await supabase.from(TABLE).select('*').order('ano_curricular');
 
   if (error) throw error;
@@ -62,6 +63,7 @@ export async function listMaterias() {
  * @returns {Promise<object>}
  */
 export async function createMateria(input) {
+  const supabase = await getSupabaseClient();
   const payload = sanitizeMateriaInput(input);
 
   const { data, error } = await supabase.from(TABLE).insert(payload).select().single();
@@ -78,6 +80,8 @@ export async function createMateria(input) {
  * @returns {Promise<{ seeded: boolean, total: number }>}
  */
 export async function seedMateriasIfEmpty() {
+  const supabase = await getSupabaseClient();
+
   const { count, error: countError } = await supabase
     .from(TABLE)
     .select('*', { count: 'exact', head: true });
@@ -91,7 +95,6 @@ export async function seedMateriasIfEmpty() {
 
   const payload = materiasDoIF.map(sanitizeMateriaInput);
 
-  // MUDANÇA AQUI: Adicionado o .select() para o Supabase detalhar o erro caso falhe
   const { error: insertError } = await supabase.from(TABLE).insert(payload).select();
 
   if (insertError) throw insertError;

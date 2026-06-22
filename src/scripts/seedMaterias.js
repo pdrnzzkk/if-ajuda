@@ -25,7 +25,7 @@ async function run() {
 
     process.exit(0);
   } catch (error) {
-    console.error('[IF-Ajuda] ❌ Erro ao executar o seed de matérias:', error);
+    console.error('[IF-Ajuda] ❌ Erro ao executar o seed de matérias:', error.message);
     process.exit(1);
   }
 }
