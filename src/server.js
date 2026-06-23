@@ -1,19 +1,9 @@
-/**
- * IF-Ajuda - Plataforma de Monitoria e Banco de Questões
- * IFSULDEMINAS - Campus Pouso Alegre
- * Grupo de Informática do IFSULDEMINAS - 2026
- *
- * Arquivo: src/server.js
- * Ponto de entrada da aplicação. Configura o Express, os middlewares
- * globais (CORS, parser JSON e limitação de requisições) e inicia o servidor.
- */
+import 'dotenv/config';
 
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import rateLimiter from './middlewares/rateLimiter.middleware.js';
-
-dotenv.config();
+import authRoutes from './routes/authRoutes.js'; // Agora sim as chaves já existem!
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +19,9 @@ app.use(rateLimiter);
 
 // Servir arquivos estáticos do front-end (public/)
 app.use(express.static('public'));
+
+// 2. Vincular as rotas de autenticação ao Express
+app.use('/api/auth', authRoutes);
 
 // Rota de verificação de saúde da API
 app.get('/api/health', (req, res) => {
