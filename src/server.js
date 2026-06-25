@@ -1,42 +1,50 @@
-import 'dotenv/config';
+/**
+ * IF-Ajuda - Plataforma de Monitoria e Banco de Questões
+ * IFSULDEMINAS - Campus Pouso Alegre
+ * Grupo de Informática do IFSULDEMINAS - 2026
+ *
+ * Arquivo: src/server.js
+ */
 
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import rateLimiter from './middlewares/rateLimiter.middleware.js';
-import authRoutes from './routes/authRoutes.js'; // Agora sim as chaves já existem!
+import routes from './routes/index.js';
 
-const app = express();
+const app  = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware de CORS - permite requisições de origens externas (front-end)
+// CORS — permite requisições do front-end
 app.use(cors());
 
-// Middleware para interpretar corpos de requisição no formato JSON
+// Interpreta corpo JSON
 app.use(express.json());
 
-// Middleware global de limitação de requisições (proteção contra abuso/queda do servidor)
+// Rate limiter global
 app.use(rateLimiter);
 
-// Servir arquivos estáticos do front-end (public/)
+// Arquivos estáticos: front-end (HTML/CSS/JS) + fotos de perfil WebP
 app.use(express.static('public'));
 
-// 2. Vincular as rotas de autenticação ao Express
-app.use('/api/auth', authRoutes);
+// Todas as rotas da API em /api
+app.use('/api', routes);
 
-// Rota de verificação de saúde da API
-app.get('/api/health', (req, res) => {
+// Health check
+app.get('/api/health', (_req, res) => {
   res.status(200).json({
-    status: 'ok',
-    service: 'IF-Ajuda API',
+    status   : 'ok',
+    service  : 'IF-Ajuda API',
     timestamp: new Date().toISOString(),
   });
 });
 
-// Middleware de tratamento de erros (deve ficar sempre por último)
-app.use((err, req, res, next) => {
+// Tratamento global de erros (sempre por último)
+app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({
-    error: err.message || 'Erro interno do servidor',
+    sucesso : false,
+    mensagem: err.message || 'Erro interno do servidor',
   });
 });
 
