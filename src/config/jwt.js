@@ -12,9 +12,23 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const jwtConfig = {
-  secret: process.env.JWT_SECRET || 'if-ajuda-dev-secret-troque-em-producao',
-  expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-};
+const JWT_SECRET   = (process.env.JWT_SECRET   || '').trim();
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '24h').trim();
 
-export default jwtConfig;
+/**
+ * Retorna a configuração do JWT, validando a presença do segredo
+ * somente quando chamado (padrão lazy, igual ao getSupabaseClient).
+ * Assim, um .env incompleto só estoura erro no momento de uso real
+ * (geração/verificação de token), não na inicialização do módulo.
+ * @returns {{ secret: string, expiresIn: string }}
+ */
+export function getJwtConfig() {
+  if (!JWT_SECRET) {
+    throw new Error(
+      '[IF-Ajuda] JWT_SECRET não definido no .env — defina um segredo forte antes de usar autenticação.'
+    );
+  }
+  return { secret: JWT_SECRET, expiresIn: JWT_EXPIRES_IN };
+}
+
+export default getJwtConfig;

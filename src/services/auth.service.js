@@ -10,7 +10,7 @@
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import jwtConfig from '../config/jwt.js';
+import { getJwtConfig } from '../config/jwt.js';
 
 const SALT_ROUNDS = 10;
 
@@ -36,10 +36,12 @@ export async function comparePassword(plainPassword, hashedPassword) {
 /**
  * Gera um token JWT a partir de um payload (ex: id e papel do usuário).
  * @param {object} payload
+ * @param {string} [expiresIn] - sobrescreve o tempo de expiração padrão
  * @returns {string} token assinado
  */
-export function generateToken(payload) {
-  return jwt.sign(payload, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
+export function generateToken(payload, expiresIn) {
+  const { secret, expiresIn: defaultExpiry } = getJwtConfig();
+  return jwt.sign(payload, secret, { expiresIn: expiresIn ?? defaultExpiry });
 }
 
 /**
@@ -48,7 +50,8 @@ export function generateToken(payload) {
  * @returns {object} payload decodificado
  */
 export function verifyToken(token) {
-  return jwt.verify(token, jwtConfig.secret);
+  const { secret } = getJwtConfig();
+  return jwt.verify(token, secret);
 }
 
 export default { hashPassword, comparePassword, generateToken, verifyToken };

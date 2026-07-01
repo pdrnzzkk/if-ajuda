@@ -13,6 +13,7 @@ import { uploadQuestao, uploadFotoPerfil } from '../config/multer.js';
 import { comprimirFotoPerfil } from '../middlewares/sharpMiddleware.js';
 import { fazerUploadQuestao, listarQuestoes } from '../controllers/questaoController.js';
 import { verificarToken } from '../middlewares/authMiddleware.js';
+import monitoriaRoutes from './monitoriaRoutes.js';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ const router = Router();
 // Auth
 // ---------------------------------------------------------------------------
 router.use('/auth', authRoutes);
+router.use('/monitorias', monitoriaRoutes);
 
 // ---------------------------------------------------------------------------
 // Banco de Questões

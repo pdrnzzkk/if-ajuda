@@ -18,11 +18,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Aceita SUPABASE_ANON_KEY (recomendado) ou SUPABASE_KEY (legado/manual),
-// e também SUPABASE_SERVICE_KEY caso você decida trocar para a service_role
-// futuramente — o código não muda, só o valor (e o nome) da variável no .env.
+// Aceita vários nomes de variável para a chave, por compatibilidade com
+// diferentes convenções: SUPABASE_SERVICE_ROLE_KEY (nome oficial do painel
+// do Supabase), SUPABASE_SERVICE_KEY, SUPABASE_ANON_KEY ou SUPABASE_KEY.
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').trim();
 const SUPABASE_KEY = (
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
   process.env.SUPABASE_SERVICE_KEY ||
   process.env.SUPABASE_ANON_KEY ||
   process.env.SUPABASE_KEY ||
